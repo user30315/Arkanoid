@@ -14,20 +14,30 @@ paddle = Actor("paddle")
 
 paddle.width = PADDLE_WIDTH
 paddle.height = PADDLE_HEIGHT
-paddle._surf = pygame.transform.scale(paddle._surf, (150, 20))
-paddle.center=(WIDTH/2 + 150, HEIGHT/2 + 280)
+paddle._surf = pygame.transform.scale(paddle._surf, (PADDLE_WIDTH, PADDLE_HEIGHT))
+paddle.center=(WIDTH/2, HEIGHT/2 + 280)
 
 ball = Actor("ball")
 ball.width = BALL_WIDTH
 ball.height = BALL_HEIGHT
-ball._surf = pygame.transform.scale(ball._surf, (20, 20))
+ball._surf = pygame.transform.scale(ball._surf, (BALL_WIDTH, BALL_HEIGHT))
 ball.center=(WIDTH/2, HEIGHT/2 + 260)
 ball.dx = random.choice([-2, 2])
 ball.dy = -2
 
-# brick_count = 5
-# brick_images = ["blueBrick", "greenBrick", "redBrick", "orangeBrick", "yellowBrick"]
-# bricks = [Actor(random.choice(brick_images)) for actor in range(brick_count)]
+BRICK_WIDTH, BRICK_HEIGHT = 80, 20
+bricks_in_a_row = 9
+bricks_in_a_column = 4
+brick_images = ["blue-brick", "green-brick", "red-brick", "orange-brick", "yellow-brick", "gray-brick"]
+bricks = []
+for i in range(bricks_in_a_column):
+    for j in range(bricks_in_a_row):
+        brick = Actor(random.choice(brick_images))
+        brick.width, brick.height = BRICK_WIDTH, BRICK_HEIGHT
+        brick._surf = pygame.transform.scale(brick._surf, (BRICK_WIDTH, BRICK_HEIGHT))
+        brick.x = 240 + BRICK_WIDTH * j
+        brick.y = 400 + BRICK_HEIGHT * i
+        bricks.append(brick)
 
 velocity = 2
 game_on = True
@@ -43,12 +53,14 @@ def update():
             ball.dx *= -1
         if ball.top < 0:
             ball.dy *= -1
-        
-        # if (ball.x - BALL_WIDTH - paddle.x - PADDLE_WIDTH) <= 50 and (ball.y - BALL_HEIGHT - paddle.y - PADDLE_HEIGHT) <= 50:
-        #     print("collision")
-        #     ball.dy *= -1
+
         if ball.colliderect(paddle):
             ball.dy *= -1
+
+        for brick in bricks:
+            if ball.colliderect(brick):
+                ball.dy *= -1
+                bricks.remove(brick)
 
 
 def on_mouse_move(pos, rel, buttons):
@@ -69,5 +81,7 @@ def draw():
     screen.fill((0, 0, 0))
     ball.draw()
     paddle.draw()
+    for brick in bricks:
+        brick.draw()
 
 pgzrun.go()
