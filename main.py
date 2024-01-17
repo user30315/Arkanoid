@@ -72,10 +72,6 @@ def on_mouse_move(pos, rel, buttons):
 def on_mouse_down():
     global can_move
     can_move = True
-    print(f"Ball x   {ball.x - BALL_WIDTH}")
-    print(f"Ball y   {ball.y - BALL_HEIGHT}")
-    print(f"paddle x   {paddle.x - PADDLE_WIDTH}")
-    print(f"paddle y   {paddle.y - PADDLE_HEIGHT}")
 
 def draw():
     screen.fill((0, 0, 0))
