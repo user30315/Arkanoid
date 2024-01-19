@@ -9,6 +9,7 @@ WIDTH, HEIGHT = 800, 600
 PADDLE_HEIGHT, PADDLE_WIDTH = 20, 150
 BALL_HEIGHT, BALL_WIDTH = 20, 20
 pygame.display.set_caption("Arkanoid")
+velocity = 5
 
 paddle = Actor("paddle")
 
@@ -22,8 +23,8 @@ ball.width = BALL_WIDTH
 ball.height = BALL_HEIGHT
 ball._surf = pygame.transform.scale(ball._surf, (BALL_WIDTH, BALL_HEIGHT))
 ball.center=(WIDTH/2, HEIGHT/2 + 260)
-ball.dx = random.choice([-2, 2])
-ball.dy = -2
+ball.dx = random.choice([-velocity, velocity])
+ball.dy = -velocity
 
 BRICK_WIDTH, BRICK_HEIGHT = 80, 20
 bricks_in_a_row = 9
@@ -39,11 +40,19 @@ for i in range(bricks_in_a_column):
         brick.y = 400 + BRICK_HEIGHT * i
         bricks.append(brick)
 
-velocity = 2
+lives  = 3
+score =  0
 game_on = True
 can_move = False
 
 def update():
+    global lives
+    global can_move
+    global game_on
+    global score
+    if lives <= 0:
+        game_on = False
+        ball.center=(WIDTH + 100, HEIGHT + 100)
 
     if game_on and can_move:
         ball.x += ball.dx
@@ -61,6 +70,13 @@ def update():
             if ball.colliderect(brick):
                 ball.dy *= -1
                 bricks.remove(brick)
+                score += 300
+
+        if ball.bottom >= 600:
+            lives -= 1
+            can_move = False
+            ball.center=(WIDTH/2, HEIGHT/2 + 260)
+            paddle.center=(WIDTH/2, HEIGHT/2 + 280)
 
 
 def on_mouse_move(pos, rel, buttons):
@@ -79,5 +95,9 @@ def draw():
     paddle.draw()
     for brick in bricks:
         brick.draw()
+    screen.draw.text(f"Lives: {lives}", (WIDTH/2 - 80, HEIGHT/2 - 250), fontsize=60, color="red", gcolor="purple")
+    screen.draw.text(f"Score: {score}", (WIDTH/2 - 85, HEIGHT/2 - 200), fontsize=60, color="red", gcolor="purple")
+    if lives <= 0:
+        screen.draw.text("GAME OVER!", (WIDTH/2 - 120, HEIGHT/2 - 50), fontsize=60, color="yellow", gcolor="red")
 
 pgzrun.go()
