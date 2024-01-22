@@ -45,11 +45,9 @@ score =  0
 game_on = True
 can_move = False
 
+
 def update():
-    global lives
-    global can_move
-    global game_on
-    global score
+    global lives, can_move, game_on, score
 
     if lives <= 0 or score == (300 * bricks_in_a_column * bricks_in_a_row):
         game_on = False
@@ -68,9 +66,8 @@ def update():
             ball.dy *= -1
 
         if ball.colliderect(paddle):
-            reflection_angle = (ball.x - paddle.x) / paddle.width
-            ball.dx = velocity * reflection_angle
-            ball.dy *= -1
+            if ball.dy > 0:
+                ball.dy *= -1
 
         for brick in bricks:
             if ball.colliderect(brick):
@@ -83,6 +80,7 @@ def update():
             can_move = False
             ball.center=(WIDTH/2, HEIGHT/2 + 260)
             paddle.center=(WIDTH/2, HEIGHT/2 + 280)
+
 
 
 def on_mouse_move(pos, rel, buttons):
