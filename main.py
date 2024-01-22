@@ -50,6 +50,7 @@ def update():
     global can_move
     global game_on
     global score
+
     if lives <= 0 or score == (300 * bricks_in_a_column * bricks_in_a_row):
         game_on = False
         can_move = False
@@ -67,6 +68,8 @@ def update():
             ball.dy *= -1
 
         if ball.colliderect(paddle):
+            reflection_angle = (ball.x - paddle.x) / paddle.width
+            ball.dx = velocity * reflection_angle
             ball.dy *= -1
 
         for brick in bricks:
