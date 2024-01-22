@@ -50,9 +50,12 @@ def update():
     global can_move
     global game_on
     global score
-    if lives <= 0:
+    if lives <= 0 or score == (300 * bricks_in_a_column * bricks_in_a_row):
         game_on = False
+        can_move = False
+        paddle.center=(WIDTH/2, HEIGHT/2 + 280)
         ball.center=(WIDTH + 100, HEIGHT + 100)
+        paddle.center=(WIDTH + 100, HEIGHT + 100)
 
     if game_on and can_move:
         ball.x += ball.dx
@@ -97,7 +100,12 @@ def draw():
         brick.draw()
     screen.draw.text(f"Lives: {lives}", (WIDTH/2 - 80, HEIGHT/2 - 250), fontsize=60, color="red", gcolor="purple")
     screen.draw.text(f"Score: {score}", (WIDTH/2 - 85, HEIGHT/2 - 200), fontsize=60, color="red", gcolor="purple")
-    if lives <= 0:
-        screen.draw.text("GAME OVER!", (WIDTH/2 - 120, HEIGHT/2 - 50), fontsize=60, color="yellow", gcolor="red")
+    if lives == 0:
+        screen.fill((0, 0, 0))
+        ball.draw()
+        paddle.draw()
+        screen.draw.text("GAME OVER!", (40, HEIGHT/2 - 50), fontsize=160, color="yellow", gcolor="red")
+    if score == (300 * bricks_in_a_column * bricks_in_a_row):
+        screen.draw.text("GAME WON!", (60, HEIGHT/2 - 50), fontsize=160, color="yellow", gcolor="blue")
 
 pgzrun.go()
